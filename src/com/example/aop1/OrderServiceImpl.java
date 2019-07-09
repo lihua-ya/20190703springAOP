@@ -26,8 +26,9 @@ public class OrderServiceImpl implements OrderService {
         System.out.println("订单删除");
     }
 
-    @Override
+    @Auditable("abc")   //通过这个注解，可以只对有注解的进行增强
     public void list() {
+       /* int a=1/0;*/
         System.out.println("订单查询");
     }
 

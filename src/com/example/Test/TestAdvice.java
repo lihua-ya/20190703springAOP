@@ -21,12 +21,12 @@ public class TestAdvice {
     @Test
     public void test01(){
         orderService.add();
-        orderService.delete();
+        /*orderService.delete();
         orderService.edit();
         orderService.list();
         orderService.method1(49);
         orderService.method2(50);
-        orderService.method3(10,15);
+        orderService.method3(10,15);*/
 
     }
 
