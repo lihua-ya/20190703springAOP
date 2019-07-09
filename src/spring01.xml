@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--开启扫描-->
+    <context:component-scan base-package="com.example.aop1"/>
+    <!--注意：奥增强的那些目标对象也需要被Spring容器管理。可以是XML配置也可以是注解扫描配置-->
+    <!--将通知作为Spring中的bean进行管理-->
+    <bean id="myadvice" class="com.example.aop1.MyAdvice"></bean>
+
+
+    <!-- 进行Spring的aop的配置
+		配置的过程：织入的过程。
+	 -->
+    <aop:config>
+        <!--
+			aop:pointcut:表示定义一个切点
+				描述的是要对哪些连接点（joinpoint）进行增强。
+				id属性：用于标识
+				expression属性：用于写一个描述筛选哪些连接点的表达式。这个表达式要满足AspectJ的语法。
+		  -->
+        <aop:pointcut id="myPointCut" expression="execution(void com.example.aop1.*Impl.*(..))" />
+        <aop:pointcut id="myPointCut1" expression="execution(void com.example.aop1.*Impl.*(..)) and args(a)" /><!--and args(a)用于传参-->
+        <aop:pointcut id="myPointCut2" expression="execution(void com.example.aop1.*Impl.*(..)) and args(a,b)" />
+        <!--aop:aspect:表示切面：切点+通知
+            ref属性：就是引用的通知类是哪个
+        -->
+        <aop:aspect ref="myadvice">
+            <!--选择5种类型的标签，对应前置、后置、最终、异常、环绕通知类型
+				pointcut-ref属性：用于引用外部定义的aop:pointcut的id
+				pointcut属性：可以写类似外部aop:pointcut中的expression属性值。也就是直接写aspectj表达式即可。
+				method属性：用于指定你的通知类的方法名。可以携带方法参数类型。
+				-->
+            <!--<aop:before method="someMethod" pointcut-ref="myPointCut"/>--> <!--pointcut可以共用-->
+           <!-- <aop:after method="someMethod" pointcut-ref="myPointCut"/>-->
+            <!--throwing属性：表示目标方法执行异常时，异常对象要传递给通知类中方法的参数名-->
+          <!--  <aop:after-throwing method="someMethod" pointcut-ref="myPointCut" throwing="e"/>-->
+            <aop:before method="getParm" pointcut-ref="myPointCut1" arg-names="a"/>
+            <aop:before method="getParm1" pointcut-ref="myPointCut2" arg-names="a,b"/>
+        </aop:aspect>
+
+
+
+
+    </aop:config>
+
+</beans>
